@@ -352,7 +352,7 @@ First we identify `side_b` as this is a common side for the side-side-side trian
 
 `side_b` is the side from joint 2 to joint 4. Joint 4 is the wrist center and we already know that position. The length in Z from joint 2 to 4 is therefore the length from the base to the wrist center, minus the offset from joint 1 to joint 2, in the Z direction. The length in X from 2 to 4 is worked out in a similar way - we know what it is from the base to the wrist center so we can just subtract the offset from joint 1 to joint 2 in X and we have our value. We can then obtain an equation for `side_b` itself.
 
-sqrt(LX<sub>2-4</sub><sup>2</sup> + LZ<sub>2-4</sub><sup>2</sup>)
+side_b = sqrt(LX<sub>2-4</sub><sup>2</sup> + LZ<sub>2-4</sub><sup>2</sup>)
 
 We now have two SSS triangles we can use to work out our thetas.
 
