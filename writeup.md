@@ -392,3 +392,22 @@ theta6 = atan2(-rot3_6[1, 1], rot3_6[1, 0])
 ```
 
 We now have all 6 angles for our joints.
+
+## IK_server analysis
+
+The `IK_server.py` provides the ROS service listening on the `calculate_ik` topic. The callback is the `handle_calculate_IK` function where the inverse kinematics problem is solved. The service receives a list of destination poses that define the desired position of the end effector and returns a list of thetas for the joints required to achieve each position.
+
+I have defined symbolic representations of matrices etc outside of the service handler as these will not change between invocations and thus we can remove the overhead associated with building these up every iteration or even every request.
+
+During development I added in a little bit of a shortcut where I would ignore all poses except the first and last in the list. This meant the robot would retreat to a safe position and then move directly to the desired goal position, deviating from the path built out by the motion planner. I've removed this particular code for the submission.
+
+The main problem I had while trying to test the robot (other than wrong joint angles) was the robot retracting the gripper before it has had a chance to attach to the cylinder. I considered two possible fixes for this:
+
+1. Add some extra delay between the grip phase and retraction phase. I decided not to do this as any delay would be arbitrarily defined and only make the issue less likely to happen (as well as making test cycles take longer).
+2. Add a topic for when the gripper has attached to the cylinder and push to that when the gripper has successfully attached. We can then subscribe to that in the code that handles retracting the gripper. I didn't do this either as it would be possible to get stuck completely if the gripper never successfully bound with the cylinder.
+
+Ultimately I ended up just using the 'Next' button to manually control the timing on that phase of the pick and place cycle.
+
+I have taken a screenshot of cylinders in the bin and uploaded a video showing a couple of iterations of the pick and place project running. Click on the image to watch the video on YouTube.
+
+[![Pick And Place Video](./bin_w_cylinders.png)](https://youtu.be/6UT6OD3IRnU)
